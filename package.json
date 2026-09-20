@@ -1,0 +1,12 @@
+{
+  "name": "edgelight-landing",
+  "version": "1.0.0",
+  "description": "Modern landing page, product showcase, and sub-₹100 Razorpay direct checkout for Edge Light",
+  "main": "index.html",
+  "author": "CHAUHANRUDRA24 <rudrachauhan2475@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx -y serve .",
+    "dev": "npx -y serve ."
+  }
+}
