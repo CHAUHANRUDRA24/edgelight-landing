@@ -1,117 +1,101 @@
 <div align="center">
 
-  <img src="assets/icon.png" alt="Edge Light Logo" width="100" height="100">
+  <img src="assets/icon.png" alt="Edge Light Logo" width="80" height="80">
 
-  # Edge Light — Official Marketing Website & Landing Page
+  # Edge Light — Web & Landing Page
 
-  **Studio Ring Illumination for Video Calls on Windows — Zero Extra Hardware**
+  **Official product website, interactive simulator, and distribution portal**
 
-  [![GitHub Stars](https://img.shields.io/github/stars/CHAUHANRUDRA24/edgelight-landing?style=for-the-badge&logo=github)](https://github.com/CHAUHANRUDRA24/edgelight-landing)
-  [![HTML5 / CSS3](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-E34F26?style=for-the-badge&logo=html5)](https://developer.mozilla.org)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-  [![Deploy: Vercel](https://img.shields.io/badge/Deploy-Vercel%20%7C%20Netlify%20%7C%20Firebase-black?style=for-the-badge&logo=vercel)](https://vercel.com)
+  [![Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-E34F26?style=flat-square&logo=html5)](https://developer.mozilla.org)
+  [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+  [![Deployment](https://img.shields.io/badge/Deploy-Vercel%20%7C%20Netlify%20%7C%20Firebase-black?style=flat-square)](https://vercel.com)
 
-  <br>
-
-  [Live Demo](#-interactive-preview-simulator) • [Pricing Matrix](#-pricing-plans-strictly-under-100) • [Downloads](#-direct-executable-downloads) • [Author](#-maintainer--author)
+  [Live Demo](#interactive-preview) • [Pricing](#pricing-tiers) • [Downloads](#downloads)
 
 </div>
 
 ---
 
-## 📖 Overview
+## Overview
 
-The **Edge Light Landing Page** is a high-converting, modern, dark-mode marketing website designed to showcase Edge Light's screen-edge illumination technology. It features an interactive in-browser simulator, clear sub-₹100 pricing tiers, Razorpay payment links, dynamic UPI QR scan-to-pay options, and direct download links for the Windows desktop binaries.
-
----
-
-## 🌟 Sections & Highlights
-
-### 💡 Interactive Browser Ring Simulator
-- Live in-browser demonstration of the Edge Light experience.
-- Visitors can adjust the color temperature (3744K warm candle to 6500K daylight) and ring thickness right on the webpage before downloading.
-
-### 💳 Affordable Pricing Plans (Strictly Under ₹100)
-- **Monthly Pass (₹29 / mo)**: Full illumination, ambient auto-sensing, WhatsApp & Zoom support.
-- **3-Month Quarter Pass (₹49 / 3mo)**: Most popular tier (~₹16/mo), continuous studio ring, free updates.
-- **Lifetime Pro (₹99 one-time)**: Best value tier, pay once, own forever, permanent HWID license.
-
-### ⚡ Seamless Razorpay & UPI Checkout
-- Direct payment buttons wired to official Razorpay payment links.
-- Instant scan-to-pay banner with support for Google Pay, PhonePe, Paytm, and BHIM.
-
-### 📦 Direct Executable Downloads
-- **Windows Installer (`Edge Light Setup 1.0.3.exe`)**: 1-click wizard with desktop shortcut and automated start-at-boot integration.
-- **Standalone Portable (`Edge Light 1.0.3.exe`)**: Zero installation required, runs immediately without administrator privileges.
-
-### ❓ Comprehensive FAQ
-- Answers to common questions regarding webcam privacy, transparent click-through bounds, and global keyboard shortcuts.
+This repository contains the marketing website and client-facing download portal for **Edge Light**. It provides an interactive browser simulator, licensing options with Razorpay and UPI checkout, and direct downloads for Windows binaries.
 
 ---
 
-## 🏗️ Project Structure
+## Features
+
+- **In-Browser Simulator**: Interactive canvas demonstrating color temperature (3000K to 6500K) and ring thickness controls directly in the browser.
+- **Direct Downloads**: Hosts the standalone portable executable and standard Windows installer.
+- **Payment Integration**: Embedded checkout via Razorpay links and dynamic UPI QR code generator.
+- **Responsive Layout**: Dark-mode glassmorphic interface built with vanilla HTML5, CSS3, and JavaScript with zero external frameworks.
+- **SEO & Performance**: Optimized meta tags, semantic markup, and sub-second load times.
+
+---
+
+## Pricing Tiers
+
+| Plan | Price | Period | Details |
+| :--- | :--- | :--- | :--- |
+| **Monthly Pass** | ₹29 | 30 Days | Full access, auto camera detection |
+| **Quarterly Pass** | ₹49 | 90 Days | Cost-effective option for regular meetings |
+| **Lifetime Pro** | ₹99 | One-time | Permanent device license |
+
+---
+
+## Project Structure
 
 ```
 landing-page/
-├── assets/                          # Branding icons and logo graphics
+├── assets/                          # Branding assets and icons
 │   ├── icon.ico
 │   ├── icon.png
 │   └── tray-icon.png
-├── index.html                       # Semantic, SEO-optimized landing page markup
-├── landing.css                      # Modern dark-mode styling, glassmorphism, responsive grid
-├── landing.js                       # Interactive simulator & slider physics
-├── Edge Light 1.0.3.exe             # Direct download: Portable standalone binary
-├── Edge Light Setup 1.0.3.exe       # Direct download: Windows NSIS installer
-├── package.json                     # Local dev server scripts
-├── .gitignore
+├── index.html                       # Landing page markup
+├── landing.css                      # Styling and responsive design
+├── landing.js                       # Simulator logic and interaction handlers
+├── Edge Light 1.0.3.exe             # Portable Windows binary
+├── Edge Light Setup 1.0.3.exe       # Windows installer binary
+├── package.json                     # Local development scripts
 └── README.md
 ```
 
 ---
 
-## 🚀 Quick Start & Development
+## Local Development
 
-### 1. Run Locally
 ```bash
 # Start local development server
 npm start
 ```
-Runs at `http://localhost:3000`.
+
+Access the page locally at `http://localhost:3000`.
 
 ---
 
-## 🌐 One-Click Deployment
+## Deployment
 
-Deployable to any static hosting provider:
+The static assets can be deployed to any modern CDN or static hosting platform:
 
-### Vercel
 ```bash
-npx vercel
-```
+# Vercel
+npx vercel --prod
 
-### Netlify
-```bash
+# Netlify
 npx netlify deploy --prod
-```
 
-### Firebase Hosting
-```bash
+# Firebase Hosting
 firebase deploy --only hosting
 ```
 
-### GitHub Pages
-Push to your repository's `gh-pages` or `main` branch under **Settings → Pages**.
+---
+
+## Author
+
+- **Maintainer**: Chauhan Rudra ([@CHAUHANRUDRA24](https://github.com/CHAUHANRUDRA24))
+- **Contact**: rudrachauhan2475@gmail.com
 
 ---
 
-## 👨‍💻 Maintainer & Author
+## License
 
-- **Author**: **CHAUHANRUDRA24**
-- **Email**: [rudrachauhan2475@gmail.com](mailto:rudrachauhan2475@gmail.com)
-- **GitHub**: [@CHAUHANRUDRA24](https://github.com/CHAUHANRUDRA24)
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
