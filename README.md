@@ -68,8 +68,6 @@ landing-page/
 npm start
 ```
 
-Access the page locally at `http://localhost:3000`.
-
 ---
 
 ## Deployment
