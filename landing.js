@@ -8,6 +8,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initDownloadFeedback();
+  initRazorpayCheckout();
 });
 
 /* ─── FAQ Accordion (Single-Open Focus) ───────────────────────────── */
@@ -79,4 +80,55 @@ function showToast(message) {
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(-50%) translateY(20px)';
   }, 3500);
+}
+
+/* ─── Razorpay Live API Checkout Modal ────────────────────────────── */
+const RAZORPAY_CONFIG = {
+  key: 'rzp_live_TbF2T3PxIu4EAn',
+  plans: {
+    monthly: { amount: 2900, name: 'Monthly Pass', price: 29, link: 'https://rzp.io/l/edgelight-monthly' },
+    quarterly: { amount: 4900, name: '3-Month Pass', price: 49, link: 'https://rzp.io/l/edgelight-3months' },
+    lifetime: { amount: 9900, name: 'Lifetime Pro', price: 99, link: 'https://rzp.io/l/edgelight-lifetime' }
+  }
+};
+
+function initRazorpayCheckout() {
+  const payButtons = document.querySelectorAll('.rzp-pay-btn');
+  payButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const planId = btn.dataset.plan || 'quarterly';
+      const plan = RAZORPAY_CONFIG.plans[planId] || RAZORPAY_CONFIG.plans.quarterly;
+
+      if (typeof Razorpay !== 'undefined') {
+        e.preventDefault();
+        const hwid = prompt('Enter your Edge Light Hardware ID (HWID) to activate automatically:', '');
+        if (hwid === null) return; // cancelled
+
+        const options = {
+          key: RAZORPAY_CONFIG.key,
+          amount: plan.amount,
+          currency: 'INR',
+          name: 'Edge Light',
+          description: `${plan.name} License`,
+          notes: {
+            plan: planId,
+            hwid: (hwid || 'NOT_PROVIDED').trim()
+          },
+          theme: {
+            color: '#ff9f43'
+          },
+          handler: function (response) {
+            showToast(`✨ Payment successful! ID: ${response.razorpay_payment_id}. License is active.`);
+          },
+          modal: {
+            ondismiss: function () {}
+          }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+      }
+      // If Razorpay script blocked or offline, browser naturally follows the href fallback link!
+    });
+  });
 }
