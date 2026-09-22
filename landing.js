@@ -3,27 +3,54 @@
  * Features:
  * - Single-open FAQ accordion behavior
  * - Instant download toast notifications & feedback
+ * - Smooth scroll navigation for all anchor links & top brand link
+ * - Copy UPI ID with instant toast confirmation
+ * - Robust, fault-tolerant Razorpay checkout modal & payment link fallback
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initSmoothScroll();
   initFAQ();
   initDownloadFeedback();
   initRazorpayCheckout();
+  initCopyUPI();
 });
+
+/* ─── Universal Smooth Scrolling & Back-to-Top ───────────────────── */
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const targetId = anchor.getAttribute('href');
+      if (targetId === '#' || targetId === '') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const targetEl = document.querySelector(targetId);
+      if (targetEl) {
+        e.preventDefault();
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, null, targetId);
+        }
+      }
+    });
+  });
+}
 
 /* ─── FAQ Accordion (Single-Open Focus) ───────────────────────────── */
 function initFAQ() {
   const allDetails = document.querySelectorAll('.faq-accordion details');
   allDetails.forEach((targetDetail) => {
-    targetDetail.addEventListener('click', (e) => {
-      // If clicking summary, close other open items for clean aesthetic
-      if (e.target.closest('summary')) {
-        allDetails.forEach((otherDetail) => {
-          if (otherDetail !== targetDetail && otherDetail.hasAttribute('open')) {
-            otherDetail.removeAttribute('open');
-          }
-        });
-      }
+    const summary = targetDetail.querySelector('summary');
+    if (!summary) return;
+    summary.addEventListener('click', () => {
+      // If expanding this item, close other open items for clean aesthetic
+      allDetails.forEach((otherDetail) => {
+        if (otherDetail !== targetDetail && otherDetail.hasAttribute('open')) {
+          otherDetail.removeAttribute('open');
+        }
+      });
     });
   });
 }
@@ -33,12 +60,38 @@ function initDownloadFeedback() {
   const downloadButtons = document.querySelectorAll('a[download]');
   downloadButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const fileName = btn.getAttribute('download') || 'Edge Light';
+      const fileName = btn.getAttribute('download') || 'Edge Light Setup 1.0.4.exe';
       showToast(`Starting download for ${fileName}...`);
     });
   });
 }
 
+/* ─── Copy UPI ID to Clipboard ──────────────────────────────────── */
+function initCopyUPI() {
+  const copyElements = document.querySelectorAll('.copy-upi, #copyUpiCode');
+  copyElements.forEach((el) => {
+    el.addEventListener('click', async () => {
+      const upiText = el.textContent.trim() || 'edgelight@upi';
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(upiText);
+        } else {
+          const tempInput = document.createElement('input');
+          tempInput.value = upiText;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+        }
+        showToast(`📋 Copied "${upiText}" to clipboard!`);
+      } catch (err) {
+        showToast(`UPI ID: ${upiText}`);
+      }
+    });
+  });
+}
+
+/* ─── Toast Notification System ─────────────────────────────────── */
 function showToast(message) {
   let toast = document.getElementById('landingToast');
   if (!toast) {
@@ -57,6 +110,7 @@ function showToast(message) {
     toast.style.fontWeight = '500';
     toast.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 178, 102, 0.2)';
     toast.style.backdropFilter = 'blur(12px)';
+    toast.style.webkitBackdropFilter = 'blur(12px)';
     toast.style.zIndex = '9999';
     toast.style.opacity = '0';
     toast.style.transition = 'opacity 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
@@ -82,7 +136,7 @@ function showToast(message) {
   }, 3500);
 }
 
-/* ─── Razorpay Live API Checkout Modal ────────────────────────────── */
+/* ─── Razorpay Live API Checkout Modal & Seamless Fallback ──────── */
 const RAZORPAY_CONFIG = {
   key: 'rzp_live_TbF2T3PxIu4EAn',
   plans: {
@@ -96,39 +150,52 @@ function initRazorpayCheckout() {
   const payButtons = document.querySelectorAll('.rzp-pay-btn');
   payButtons.forEach((btn) => {
     btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const planId = btn.dataset.plan || 'quarterly';
       const plan = RAZORPAY_CONFIG.plans[planId] || RAZORPAY_CONFIG.plans.quarterly;
+      const targetUrl = plan.link || btn.getAttribute('href') || 'https://rzp.io/l/edgelight-3months';
 
+      showToast(`⚡ Launching ${plan.name} (₹${plan.price}) checkout...`);
+
+      // Try Razorpay modal if checkout script is loaded and functional
       if (typeof Razorpay !== 'undefined') {
-        e.preventDefault();
-        const hwid = prompt('Enter your Edge Light Hardware ID (HWID) to activate automatically:', '');
-        if (hwid === null) return; // cancelled
+        try {
+          const options = {
+            key: RAZORPAY_CONFIG.key,
+            amount: plan.amount,
+            currency: 'INR',
+            name: 'Edge Light',
+            description: `${plan.name} License`,
+            notes: {
+              plan: planId
+            },
+            theme: {
+              color: '#ff9f43'
+            },
+            handler: function (response) {
+              showToast(`✨ Payment successful! ID: ${response.razorpay_payment_id}. License is active.`);
+            },
+            modal: {
+              ondismiss: function () {
+                showToast('Checkout window closed.');
+              }
+            }
+          };
 
-        const options = {
-          key: RAZORPAY_CONFIG.key,
-          amount: plan.amount,
-          currency: 'INR',
-          name: 'Edge Light',
-          description: `${plan.name} License`,
-          notes: {
-            plan: planId,
-            hwid: (hwid || 'NOT_PROVIDED').trim()
-          },
-          theme: {
-            color: '#ff9f43'
-          },
-          handler: function (response) {
-            showToast(`✨ Payment successful! ID: ${response.razorpay_payment_id}. License is active.`);
-          },
-          modal: {
-            ondismiss: function () {}
-          }
-        };
-
-        const rzp = new Razorpay(options);
-        rzp.open();
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function () {
+            // If modal payment fails or requires hosted checkout, open official payment link
+            window.open(targetUrl, '_blank');
+          });
+          rzp.open();
+          return;
+        } catch (err) {
+          console.warn('[Razorpay] Modal initialization failed, falling back to direct link:', err);
+        }
       }
-      // If Razorpay script blocked or offline, browser naturally follows the href fallback link!
+
+      // Seamless fallback: open the verified Razorpay payment link directly
+      window.open(targetUrl, '_blank');
     });
   });
 }
