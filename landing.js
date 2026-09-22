@@ -164,9 +164,9 @@
   const RAZORPAY_CONFIG = {
     key: 'rzp_live_TbF2T3PxIu4EAn',
     plans: {
-      monthly: { amount: 2900, name: 'Monthly Pass', price: 29, link: 'https://rzp.io/l/edgelight-monthly' },
-      quarterly: { amount: 4900, name: '3-Month Pass', price: 49, link: 'https://rzp.io/l/edgelight-3months' },
-      lifetime: { amount: 9900, name: 'Lifetime Pro', price: 99, link: 'https://rzp.io/l/edgelight-lifetime' }
+      monthly: { amount: 2900, name: 'Monthly Pass', price: 29, link: 'https://rzp.io/rzp/WY3lkA6' },
+      quarterly: { amount: 4900, name: '3-Month Pass', price: 49, link: 'https://rzp.io/rzp/01mOm4K' },
+      lifetime: { amount: 9900, name: 'Lifetime Pro', price: 99, link: 'https://rzp.io/rzp/K30Pa9v' }
     }
   };
 
